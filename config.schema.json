@@ -1,0 +1,54 @@
+{
+  "pluginAlias": "HttpTemperatureMonitor",
+  "pluginType": "accessory",
+  "singular": true,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "Name",
+        "type": "string",
+        "required": true
+      },
+      "url": {
+        "title": "URL",
+        "type": "string",
+        "required": true
+      },
+      "updateInterval": {
+        "title": "Update Interval",
+        "type": "integer",
+        "default": 30000
+      },
+      "alertTemperature": {
+        "title": "Alert Temperature",
+        "type": "integer",
+        "default": 80
+      },
+      "alertThreshold": {
+        "title": "Alert Threshold",
+        "type": "integer",
+        "default": 4
+      }
+    }
+  },
+  "form": [
+    "name",
+    "url",
+    {
+      "key": "updateInterval",
+      "title": "Update Interval (ms)",
+      "type": "number"
+    },
+    {
+      "key": "alertTemperature",
+      "title": "Alert Temperature (C)",
+      "type": "number"
+    },
+    {
+      "key": "alertThreshold",
+      "title": "Alert Threshold",
+      "type": "number"
+    }
+  ]
+}
