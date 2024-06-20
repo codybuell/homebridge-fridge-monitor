@@ -1,10 +1,11 @@
 const http = require('http');
 let Service, Characteristic;
 
-module.exports = (api) => {
-  api.registerAccessory('HttpTemperatureMonitor', HttpTemperatureMonitor);
-  Service = api.hap.Service;
-  Characteristic = api.hap.Characteristic;
+module.exports = (homebridge) => {
+  Service = homebridge.hap.Service;
+  Characteristic = homebridge.hap.Characteristic;
+
+  homebridge.registerAccessory('homebridge-temperature-monitor', 'HttpTemperatureMonitor', HttpTemperatureMonitor);
 };
 
 class HttpTemperatureMonitor {
