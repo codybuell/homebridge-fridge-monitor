@@ -9,11 +9,10 @@ module.exports = (homebridge) => {
 };
 
 class HttpTemperatureMonitor {
-  constructor(log, config, api) {
+  constructor(log, config) {
     // pull bits into class
     this.log = log;
     this.config = config;
-    this.api = api;
 
     // stub initial values
     this.temperature = 20;
