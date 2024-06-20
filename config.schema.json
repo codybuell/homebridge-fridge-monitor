@@ -18,12 +18,12 @@
       "updateInterval": {
         "title": "Update Interval",
         "type": "integer",
-        "default": 30000
+        "default": 60000
       },
       "alertTemperature": {
         "title": "Alert Temperature",
         "type": "integer",
-        "default": 80
+        "default": 26
       },
       "alertThreshold": {
         "title": "Alert Threshold",
