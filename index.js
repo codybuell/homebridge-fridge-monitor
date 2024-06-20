@@ -74,10 +74,10 @@ class HttpTemperatureMonitor {
       });
 
       // log the current temperature
-      this.log.info('Current temp: %s', this.temperature);
+      this.log.debug('Current temp: %s', this.temperature);
 
     }).on('error', (err) => {
-      this.log.info('Error: ' + err.message);
+      this.log.warn('Error: ' + err.message);
     });
   }
 
