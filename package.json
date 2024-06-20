@@ -14,9 +14,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "dependencies": {
-    "homebridge": "^1.8.1"
-  },
   "engines": {
     "node": "^18.13.0 || ^20.13.0",
     "homebridge": "^1.6.0"
