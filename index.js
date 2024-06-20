@@ -5,7 +5,7 @@ module.exports = (homebridge) => {
   Service = homebridge.hap.Service;
   Characteristic = homebridge.hap.Characteristic;
 
-  homebridge.registerAccessory('homebridge-temperature-monitor', 'HttpTemperatureMonitor', HttpTemperatureMonitor);
+  homebridge.registerAccessory('HttpTemperatureMonitor', HttpTemperatureMonitor);
 };
 
 class HttpTemperatureMonitor {
