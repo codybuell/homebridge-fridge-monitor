@@ -1,7 +1,7 @@
 Homebridge Temperature Monitor
 ==============================
 
-This [homebridge](https://github.com/homebridge/homebridge) plugin exposes a web-based temperature sensor to Apple's [HomeKit](http://www.apple.com/ios/home/). Using simple HTTP requests, the plugin allows you to read temperatures and define alert thresholds.
+This [homebridge](https://github.com/homebridge/homebridge) plugin exposes a web-based temperature sensor to Apple's [HomeKit](http://www.apple.com/ios/home/). Using HTTP requests, the plugin allows you to read temperatures from remote servers and define alert thresholds.
 
 Installation
 ------------
