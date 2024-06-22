@@ -5,10 +5,10 @@ module.exports = (homebridge) => {
   Service = homebridge.hap.Service;
   Characteristic = homebridge.hap.Characteristic;
 
-  homebridge.registerAccessory('HttpTemperatureMonitor', HttpTemperatureMonitor);
+  homebridge.registerAccessory('HttpFridgeMonitor', HttpFridgeMonitor);
 };
 
-class HttpTemperatureMonitor {
+class HttpFridgeMonitor {
   constructor(log, config) {
     // pull bits into class
     this.log = log;
@@ -18,6 +18,7 @@ class HttpTemperatureMonitor {
     this.temperature = 20;
     this.temperatureCount = 0;
     this.alertState = Characteristic.LeakDetected.LEAK_NOT_DETECTED
+    this.contactState = Characteristic.ContactSensorState.CONTACT_DETECTED;
 
     // grab configuration
     this.name = config.name;
@@ -28,24 +29,33 @@ class HttpTemperatureMonitor {
 
     // initialize temperature service
     this.temperatureService = new Service.TemperatureSensor(this.name);
-
-    // set current temperature characteristic
     this.temperatureService
       .getCharacteristic(Characteristic.CurrentTemperature)
       .on('get', this.getTemperature.bind(this));
-
-    // set temperature display units characteristic
     this.temperatureService
       .getCharacteristic(Characteristic.TemperatureDisplayUnits)
       .setValue(Characteristic.TemperatureDisplayUnits.FAHRENHEIT);
 
-    // initialize the alert service
+    // initialize the information service
+    this.informationService = new Service.AccessoryInformation();
+    this.informationService
+      .setCharacteristic(Characteristic.Manufacturer, 'HttpFridgeMonitor')
+      .setCharacteristic(Characteristic.Model, 'HttpFridgeMonitor')
+      .setCharacteristic(Characteristic.SerialNumber, 'N/A');
+
+    // initialize the alert service (leak sensor)
     this.alertService = new Service.LeakSensor(this.name + ' Alert');
     this.alertService.getCharacteristic(Characteristic.LeakDetected)
       .on('get', this.getAlertState.bind(this));
 
+    // initial the contact sensor
+    this.contactService = new Service.ContactSensor(this.name + ' Door');
+    this.contactService
+      .getCharacteristic(Characteristic.ContactSensorState)
+      .on('get', this.getContactState.bind(this));
+
     // log startup
-    this.log.info('HttpTemperatureMonitor Plugin Loaded');
+    this.log.info('HttpFridgeMonitor Plugin Loaded');
 
     // fetch initial values and schedule periodic updates
     this.fetchData();
@@ -61,8 +71,9 @@ class HttpTemperatureMonitor {
       });
 
       res.on('end', () => {
+        state = JSON.parse(data);
         // grab the current temperature
-        this.temperature = JSON.parse(data).temp_c;
+        this.temperature = state.temp_c;
 
         // update the temperature service
         this.temperatureService
@@ -71,6 +82,11 @@ class HttpTemperatureMonitor {
 
         // check for alarm status
         this.checkTemperature(this.temperature);
+
+        // update the contact sensor
+        this.contactState = state.door_open
+          ? Characteristic.ContactSensorState.CONTACT_NOT_DETECTED
+          : Characteristic.ContactSensorState.CONTACT_DETECTED;
       });
 
       // log the current temperature
@@ -90,11 +106,14 @@ class HttpTemperatureMonitor {
         this.triggerAlert();
       }
     } else {
-      // reset the alert state when the temperature goes below the threshold
       this.temperatureCount = 0;
-      this.alertState = Characteristic.LeakDetected.LEAK_NOT_DETECTED;
-      this.alertService.getCharacteristic(Characteristic.LeakDetected)
-        .updateValue(this.alertState);
+      // reset the alert state when the temperature goes below the threshold
+      if (this.alertState == Characteristic.LeakDetected.LEAK_DETECTED) {
+        this.alertState = Characteristic.LeakDetected.LEAK_NOT_DETECTED;
+        this.alertService.getCharacteristic(Characteristic.LeakDetected)
+          .updateValue(this.alertState);
+        this.log.info('Temperature alert reset')
+      }
     }
   }
 
@@ -122,10 +141,16 @@ class HttpTemperatureMonitor {
     callback(null, this.alertState);
   }
 
+  getContactState(callback) {
+    callback(null, this.contactState);
+  }
+
   getServices() {
     return [
       this.temperatureService,
       this.alertService,
+      this.informationService,
+      this.contactService,
     ];
   }
 }
