@@ -71,7 +71,7 @@ class HttpFridgeMonitor {
       });
 
       res.on('end', () => {
-        state = JSON.parse(data);
+        let state = JSON.parse(data);
         // grab the current temperature
         this.temperature = state.temp_c;
 
