@@ -1,7 +1,7 @@
 {
   "displayName": "Fridge Monitor",
   "name": "homebridge-fridge-monitor",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Homebridge plugin to monitor fridges from a http server.",
   "license": "ISC",
   "author": "Cody Buell",
