@@ -30,8 +30,8 @@ If you want to build your own device for a few dollars consider the [picow-fridg
 
 ```json
 {
-  "temp_f": "79.36",
-  "temp_c": "26.31",
+  "temp_f": 79.36,
+  "temp_c": 26.31,
   "door_open": false
 }
 ```
